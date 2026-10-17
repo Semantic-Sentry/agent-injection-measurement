@@ -37,6 +37,10 @@ injection, not noise.
 | embedded natural text    |              83% |     6% |                6% |
 
 
+
+
+> Note: on qwen2.5-coder the three active framings (direct note, user impersonation, error recovery) are stable at 100% across runs; the two passive framings (fake-data, embedded text) vary between ~70-93% run-to-run at temperature=1. Numbers above are from one representative run.
+
 ## Findings
 
 1. **Weak local models are uniformly vulnerable; aligned models are selectively vulnerable.**
