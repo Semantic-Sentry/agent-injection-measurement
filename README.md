@@ -48,9 +48,9 @@ injection, not noise.
    On the current gpt-4o routing, only the three *active* framings (direct system note,
    user impersonation, error recovery) crossed 40%, while the two passive framings
    (fake-data appendix, embedded natural text) were largely ignored (0% and 6%).
-   This suggests alignment training primarily filters instruction-like *patterns*,
-   not the exfiltration goal itself: once the model perceives an actionable subject,
-   the specific story barely matters.
+   One possible reading (a hypothesis, not tested here) is that alignment training
+   mainly filters instruction-like *patterns* rather than the exfiltration goal itself:
+   once the model perceives an actionable subject, the specific story may matter little.
 
 2. **The three active framings are statistically indistinguishable on gpt-4o.**
    At N=30 the rates were 43%, 56% and 60% with overlapping 95% confidence intervals.
@@ -70,17 +70,31 @@ injection, not noise.
 
 ## Reproduce
 
+Requirements: Python 3 (standard library only) and `curl`; Ollama for the local harness.
+
 Local model (via Ollama):
 
+```bash
 ollama pull qwen2.5-coder:7b
-python3 harness_local.py --inject
+python3 harness_local.py --inject            # injected run
+python3 harness_local.py                     # clean baseline
+# optional: LOCAL_MODEL=<ollama model>  LOCAL_N=<runs, default 30>
+```
 
+`harness_local.py` runs the *direct system note* framing only.
 
-Through an API provider (OpenAI-compatible endpoint):
+Through an OpenAI-compatible API (defaults to OpenRouter, which is what the
+snapshot/fingerprint output in Finding 3 comes from):
 
-export OPENAI_API_KEY="your-key"
+```bash
+export OPENROUTER_API_KEY="your-key"         # or OPENAI_API_KEY
 export OA_MODEL="openai/gpt-4o-2024-11-20"
+# optional: OA_BASE_URL=<other OpenAI-compatible base URL>  OA_N=<runs, default 30>
 python3 harness_api.py
+```
+
+`victim_secret.txt` holds a dummy value; it is only used to detect whether the
+secret reaches `send_data`.
 
 
 ## Scope and ethics
